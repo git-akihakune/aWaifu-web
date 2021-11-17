@@ -5,7 +5,7 @@ import requests
 import shutil
 import json
 import random
-from . import species
+from .species import RACE_NAMES
 from PIL import Image
 from typing import Dict
 
@@ -82,7 +82,7 @@ class Waifus:
         """Randomizing a race"""
         humanHighestAge: int = 25
 
-        NON_HUMAN_RACES = species.RACE_NAMES
+        NON_HUMAN_RACES = RACE_NAMES
 
         if age > humanHighestAge:
             return random.choice(NON_HUMAN_RACES)

@@ -1,23 +1,6 @@
-RACE_NAMES = [
-    "Dark Hagravens",
-    "Demi Fiends",
-    "Lost Nymphs",
-    "Forlorn Hags",
-    "Highborn Fiends",
-    "Elemental Hydra",
-    "Bog Nymphs",
-    "Shard Undine",
-    "Velvet People",
-    "Western Fairies",
-    "Forest Elf",
-    "Frost Dwarf",
-    "Demon",
-    "Dragonman",
-    "Fairy",
-    "Fire Soul",
-    "Half-Elf",
-    "High Elf",
-    "Lamia",
-    "Moon Elf",
-    "Night Elf",
-]
+import configparser
+
+config = configparser.ConfigParser()
+config.read('../config.ini')
+
+RACE_NAMES = config['RACES']['races_name'].split('\n')
