@@ -15,7 +15,7 @@ def index():
 
 @app.route('/settings')
 def settings():
-    return "This should be a dashboard, that let users configure some parameters on. It'll soon be developed."
+    return render_template('settings.html')
 
 
 @app.route('/profile')
