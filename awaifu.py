@@ -26,7 +26,6 @@ if not config['DEFAULT']['dependency_installed'] in TURN_ON:
 if config['DEFAULT']['debug'] in TURN_ON:
     os.environ["FLASK_APP"] = "aWaifu/web"
     os.environ["FLASK_ENV"] = "development"
-    print("Running in debug mode")
     os.system("flask run")
 else:
     print("Production mode detected.")
