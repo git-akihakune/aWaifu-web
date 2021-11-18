@@ -135,17 +135,57 @@ copyBtn.addEventListener("click", () => {
 
 // When Generate is clicked Password id generated.
 generateBtn.addEventListener("click", () => {
-	const length = +lengthEl.value;
+	const length = lengthEl.value;
 	const hasLower = lowercaseEl.checked;
 	const hasUpper = uppercaseEl.checked;
 	const hasNumber = numberEl.checked;
 	const hasSymbol = symbolEl.checked;
-	generatedPassword = true;
-	resultEl.innerText = generatePassword(length, hasLower, hasUpper, hasNumber, hasSymbol);
-	copyInfo.style.transform = "translateY(0%)";
-	copyInfo.style.opacity = "0.75";
-	copiedInfo.style.transform = "translateY(200%)";
-	copiedInfo.style.opacity = "0";
+	// generatedPassword = true;
+	// resultEl.innerText = generatePassword(length, hasLower, hasUpper, hasNumber, hasSymbol);
+	// copyInfo.style.transform = "translateY(0%)";
+	// copyInfo.style.opacity = "0.75";
+	// copiedInfo.style.transform = "translateY(200%)";
+	// copiedInfo.style.opacity = "0";
+
+	// // Send POST request to /profile
+	fetch("/profile", {
+		method: "POST",
+		redirect: "manual",
+		headers: {
+			"Content-Type": "application/json",
+			"Access-Control-Allow-Origin": "*",
+		},
+		body: JSON.stringify({
+			length: length,
+			hasLower: hasLower,
+			hasUpper: hasUpper,
+			hasNumber: hasNumber,
+			hasSymbol: hasSymbol,
+		}),
+	}).then(res => {
+		console.log('Response:', res);
+	}).then(response => {
+        // HTTP 301 response
+        // HOW CAN I FOLLOW THE HTTP REDIRECT RESPONSE?
+        if (response.redirected) {
+            window.location.href = response.url;
+        }
+    })
+    .catch(function(err) {
+        console.info(err + " url: " + '/profile');
+    });
+
+
+	// var xhr = new XMLHttpRequest();
+	// xhr.open("POST", '/profile', true);
+	// xhr.setRequestHeader('Content-Type', 'application/json');
+	// xhr.send(JSON.stringify({
+	// 	length: length,
+	// 	hasLower: hasLower,
+	// 	hasUpper: hasUpper,
+	// 	hasNumber: hasNumber,
+	// 	hasSymbol: hasSymbol,
+	// }));
 });
 
 // Function responsible to generate password and then returning it.
@@ -169,14 +209,15 @@ function generatePassword(length, lower, upper, number, symbol) {
 
 // function that handles the checkboxes state, so at least one needs to be selected. The last checkbox will be disabled.
 function disableOnlyCheckbox(){
-	let totalChecked = [uppercaseEl, lowercaseEl, numberEl, symbolEl].filter(el => el.checked)
-	totalChecked.forEach(el => {
-		if(totalChecked.length == 1){
-			el.disabled = true;
-		}else{
-			el.disabled = false;
-		}
-	})
+	// let totalChecked = [uppercaseEl, lowercaseEl, numberEl, symbolEl].filter(el => el.checked)
+	// totalChecked.forEach(el => {
+	// 	if(totalChecked.length == 1){
+	// 		el.disabled = true;
+	// 	}else{
+	// 		el.disabled = false;
+	// 	}
+	// })
+	return
 }
 
 [uppercaseEl, lowercaseEl, numberEl, symbolEl].forEach(el => {

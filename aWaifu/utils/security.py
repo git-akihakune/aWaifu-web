@@ -1,2 +1,2 @@
-def checkPreviousSite():
-    pass
+def apiKeyIsValid(key:str):
+    return True
