@@ -93,99 +93,45 @@ let resultContainerBound = {
 };
 // This will update the position of the copy button based on mouse Position
 resultContainer.addEventListener("mousemove", e => {
-	resultContainerBound = {
-		left: resultContainer.getBoundingClientRect().left,
-		top: resultContainer.getBoundingClientRect().top,
-	};
-	if(generatedPassword){
-		copyBtn.style.opacity = '1';
-		copyBtn.style.pointerEvents = 'all';
-		copyBtn.style.setProperty("--x", `${e.x - resultContainerBound.left}px`);
-		copyBtn.style.setProperty("--y", `${e.y - resultContainerBound.top}px`);
-	}else{
-		copyBtn.style.opacity = '0';
-		copyBtn.style.pointerEvents = 'none';
-	}
-});
-window.addEventListener("resize", e => {
-	resultContainerBound = {
-		left: resultContainer.getBoundingClientRect().left,
-		top: resultContainer.getBoundingClientRect().top,
-	};
+	return
 });
 
 // Copy Password in clipboard
 copyBtn.addEventListener("click", () => {
-	const textarea = document.createElement("textarea");
-	const password = resultEl.innerText;
-	if (!password || password == "CLICK GENERATE") {
-		return;
-	}
-	textarea.value = password;
-	document.body.appendChild(textarea);
-	textarea.select();
-	document.execCommand("copy");
-	textarea.remove();
-
-	copyInfo.style.transform = "translateY(200%)";
-	copyInfo.style.opacity = "0";
-	copiedInfo.style.transform = "translateY(0%)";
-	copiedInfo.style.opacity = "0.75";
+	return
 });
 
 // When Generate is clicked Password id generated.
 generateBtn.addEventListener("click", () => {
-	const length = lengthEl.value;
-	const hasLower = lowercaseEl.checked;
-	const hasUpper = uppercaseEl.checked;
-	const hasNumber = numberEl.checked;
-	const hasSymbol = symbolEl.checked;
-	// generatedPassword = true;
-	// resultEl.innerText = generatePassword(length, hasLower, hasUpper, hasNumber, hasSymbol);
-	// copyInfo.style.transform = "translateY(0%)";
-	// copyInfo.style.opacity = "0.75";
-	// copiedInfo.style.transform = "translateY(200%)";
-	// copiedInfo.style.opacity = "0";
+	const quantity = lengthEl.value;
+	const largeImage = lowercaseEl.checked;
+	const multiCulture = uppercaseEl.checked;
+	const autoDownload = numberEl.checked;
+	const breakTimeLimit = symbolEl.checked;
 
 	// // Send POST request to /profile
 	fetch("/profile", {
 		method: "POST",
-		redirect: "manual",
+		redirect: "follow",
+		mode: "cors",
+		crossDomain: true,
 		headers: {
 			"Content-Type": "application/json",
-			"Access-Control-Allow-Origin": "*",
 		},
 		body: JSON.stringify({
-			length: length,
-			hasLower: hasLower,
-			hasUpper: hasUpper,
-			hasNumber: hasNumber,
-			hasSymbol: hasSymbol,
+			quantity: quantity,
+			largeImage: largeImage,
+			multiCulture: multiCulture,
+			autoDownload: autoDownload,
+			breakTimeLimit: breakTimeLimit,
 		}),
 	}).then(res => {
 		console.log('Response:', res);
-	}).then(response => {
-        // HTTP 301 response
-        // HOW CAN I FOLLOW THE HTTP REDIRECT RESPONSE?
-        if (response.redirected) {
-            window.location.href = response.url;
-        }
-    })
+		// window.location.replace(res.url);
+	})
     .catch(function(err) {
         console.info(err + " url: " + '/profile');
     });
-
-
-	// var xhr = new XMLHttpRequest();
-	// xhr.open("POST", '/profile', true);
-	// xhr.setRequestHeader('Content-Type', 'application/json');
-	// xhr.send(JSON.stringify({
-	// 	length: length,
-	// 	hasLower: hasLower,
-	// 	hasUpper: hasUpper,
-	// 	hasNumber: hasNumber,
-	// 	hasSymbol: hasSymbol,
-	// }));
 });
 
 // Function responsible to generate password and then returning it.

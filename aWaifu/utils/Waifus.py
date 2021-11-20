@@ -5,8 +5,7 @@ import requests
 import shutil
 import json
 import random
-from .species import RACE_NAMES
-from PIL import Image
+from .config import RACE_NAMES
 from typing import Dict
 
 
@@ -18,58 +17,33 @@ class Waifus:
         verbose: bool = False,
         multiCultures: bool = True,
         bigWaifu: bool = False,
-        noProfile: bool = False,
-        noImage: bool = False,
         faster: bool = False,
     ):
-        self.dataPath = dataPath
+        self.dataPath = dataPath if dataPath[-1] == "/" else dataPath + "/"
         self.numberOfProfiles: int = numberOfProfiles
         self.verbose = verbose
         self.multiCultures = multiCultures
         self.bigWaifu = bigWaifu
-        self.noProfile = noProfile
-        self.noImage = noImage
         self.timeLimitBreak = faster
 
-    # Methods are arranged from more public -> more private ones
-    # The last method is an exception, as it's the main method of this class
-
-    @staticmethod
-    def cleanUpPreviousRuns() -> None:
+    def cleanUpPreviousRuns(self) -> None:
         """Delete data from previous executions"""
-        defaultDataDir: str = "waifus"
+        defaultDataDir: str = self.dataPath
         shutil.rmtree(defaultDataDir, ignore_errors=True)
 
-    @staticmethod
-    def showWaifuImages() -> None:
-        waifuImageDir: str = "waifus"
-
-        if os.path.isdir(waifuImageDir):
-            for filename in os.listdir(waifuImageDir):
-                if filename.startswith("waifu-") or filename.endswith(".png"):
-                    imagePath: str = waifuImageDir + "/" + filename
-                    print(f"Showing: {imagePath}\n")
-                    img = Image.open(imagePath)
-                    img.show()
-                    print("\n\n\n")
-
-        else:
-            raise FileNotFoundError("Make sure that you've generated some profiles")
-
-    @staticmethod
-    def getAllInfo() -> None:
+    def download(self) -> None:
         """Download every generated information under zipped format"""
-        print("Zipping files... Please patiently wait...", end="\r")
         try:
-            shutil.make_archive("waifus", "zip", "waifus")
-            print("Files successfullly archived in 'waifus.zip'")
+            dataPathName: str = self.dataPath - '/'
+            shutil.make_archive(dataPathName, "zip", dataPathName)
+            print(f"Files successfullly archived in '{dataPathName}.zip'")
         except FileNotFoundError:
             print("Please make sure that you have generated 'waifus' directory first.")
             return None
 
     @staticmethod
     def getRandomAge() -> None:
-        """Generate completely random, unrelated age"""
+        """Generate completely random age"""
         return random.choice(
             [
                 random.randint(3, 25),  # age of human waifu
@@ -94,10 +68,6 @@ class Waifus:
         if self.verbose:
             if contextType == "text":
                 print(context, end="\n")
-            elif contextType == "image":
-                img = Image.open(context)
-                img.show()
-                print("\n\n\n")
             elif contextType == "dictionary":
                 print(json.dumps(context, indent=4, ensure_ascii=False))
                 print()
@@ -151,7 +121,7 @@ class Waifus:
             waifu = waifulabs.GenerateWaifu()
 
         waifu.save(self.dataPath + filename)
-        self._vbose("image", self.dataPath + filename)
+        self._vbose("text", f"Image generated at {self.dataPath + filename}")
 
     def generateProfiles(self) -> None:
         """Generate full waifu profiles"""
@@ -162,11 +132,6 @@ class Waifus:
 
         for i in range(self.numberOfProfiles):
             self._vbose("text", f"ID: {i + 1}/{self.numberOfProfiles}\n")
-
-            if not self.noProfile:
-                self._getRandomProfile(imagePath=self.dataPath + f"waifu-{i + 1}.png")
-            if not self.noImage:
-                self._getRandomImages(filename=f"waifu-{i + 1}.png")
 
             if not self.timeLimitBreak:
                 time.sleep(0.75)  # try not to DOS Waifulab's servers
