@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_cors import CORS
 from utils.security import apiKeyIsValid
+from utils.config import domainName
 
 app = Flask(__name__,
             static_url_path='',
@@ -22,13 +23,14 @@ def settings():
 @app.route('/profile', methods = ['GET', 'POST'])
 def profile():
     # To prevent users from accessing the page manually
-    if request.referrer != '/settings':
+    if request.referrer != f'{domainName}/settings':
         return redirect("https://youtu.be/dQw4w9WgXcQ")
 
     if request.method == 'POST':
         data = request.data
-        return f"{data}"
-    return "This is not a POST request"
+        print(data)
+        return f"{data}" # redirect(url_for('profile'), code=307)
+    return "Invalid request method"
 
 
 
@@ -39,14 +41,15 @@ def api():
     else:
         apiKey = request.args.get('api_key')
 
-    if apiKeyIsValid(apiKey):
+    if apiKey == None or not apiKeyIsValid(apiKey):
         return jsonify({
-            "status": "success",
-            "message": "API key is valid"
-        })
-    return jsonify({
         "status": "error",
         "message": "API key is invalid"
+    })
+    return jsonify({
+        "status": "success",
+        "message": "API key is valid",
+        "api_key": apiKey,
     })
 
 # A small Easter Egg
