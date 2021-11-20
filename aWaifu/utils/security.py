@@ -1,2 +1,4 @@
+from .config import allowedKeys
+
 def apiKeyIsValid(key:str):
-    return True
+    return key in allowedKeys
