@@ -82,7 +82,7 @@ const copyInfo = document.querySelector(".result__info.right");
 // Text appear after copy button is clicked
 const copiedInfo = document.querySelector(".result__info.left");
 
-// if this variable is trye only then the copyBtn will appear, i.e. when the user first click generate the copyBth will interact.
+// if this variable is true only then the copyBtn will appear, i.e. when the user first click generate the copyBth will interact.
 let generatedPassword = false;
 
 // Update Css Props of the COPY button
@@ -110,28 +110,49 @@ generateBtn.addEventListener("click", () => {
 	const breakTimeLimit = symbolEl.checked;
 
 	// // Send POST request to /profile
-	fetch("/profile", {
-		method: "POST",
-		redirect: "follow",
-		mode: "cors",
-		crossDomain: true,
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({
+	// fetch("/profile", {
+	// 	method: "POST",
+	// 	redirect: "follow",
+	// 	mode: "cors",
+	// 	crossDomain: true,
+	// 	headers: {
+	// 		"Content-Type": "application/json",
+	// 	},
+	// 	body: JSON.stringify({
+	// 		quantity: quantity,
+	// 		largeImage: largeImage,
+	// 		multiCulture: multiCulture,
+	// 		autoDownload: autoDownload,
+	// 		breakTimeLimit: breakTimeLimit,
+	// 	}),
+	// }).then(res => {
+	// 	console.log('Response:', res);
+	// 	window.location.replace(res.url);
+	// })
+    // .catch(function(err) {
+    //     console.info(err + " url: " + '/profile');
+    // });
+
+	$.ajax({
+		url: "/profile",
+		type: "POST",
+		data: {
 			quantity: quantity,
 			largeImage: largeImage,
 			multiCulture: multiCulture,
 			autoDownload: autoDownload,
-			breakTimeLimit: breakTimeLimit,
-		}),
-	}).then(res => {
-		console.log('Response:', res);
-		// window.location.replace(res.url);
-	})
-    .catch(function(err) {
-        console.info(err + " url: " + '/profile');
-    });
+			breakTimeLimit: breakTimeLimit
+		},
+		success: function (response) {
+			if (response.successFlag) {
+				//Replace current location from the history via history API
+				window.history.replaceState({}, 'foo', '/foo');
+				window.location = "url of target location here if you want to send a get request";
+				$("#form-id").submit();//if you want to post something up
+			}
+		}
+	});
+
 });
 
 // Function responsible to generate password and then returning it.
