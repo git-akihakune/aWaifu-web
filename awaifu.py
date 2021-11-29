@@ -38,8 +38,7 @@ if __name__ == '__main__':
         os.environ["FLASK_ENV"] = "development"
 
         if autoOpenBrowser in TURN_ON:
-            from threading import Timer
-            Timer(2, openBrowser()).start()
+            openBrowser()
         os.system("flask run")
     else:
         print("Production mode detected. Please set up WSGI.")
