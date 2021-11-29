@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_cors import CORS
+from utils import waifugen
 from utils.security import apiKeyIsValid
 from utils.config import domainName
 
@@ -46,10 +47,14 @@ def api():
         "status": "error",
         "message": "API key is invalid"
     })
+
+    data = waifugen.generate()
+
     return jsonify({
         "status": "success",
         "message": "API key is valid",
         "api_key": apiKey,
+        "data": data
     })
 
 # A small Easter Egg
