@@ -7,11 +7,9 @@ configfile = 'config.ini'
 config = configparser.ConfigParser()
 config.read(configfile)
 
-TURN_ON = ['True', 'true', '1', 'yes', 'Yes', 'YES', 'y', 'Y', 't', 'T', 'on', 'On', 'ON']
-
-debugMode = config['DEFAULT']['debug']
-dependencyInstalled = config['DEFAULT']['dependency_installed']
-autoOpenBrowser = config['WEB']['auto_open_browser']
+debugMode = config.getboolean('DEFAULT', 'debug')
+dependencyInstalled = config.getboolean('DEFAULT', 'dependency_installed')
+autoOpenBrowser = config.getboolean('WEB', 'auto_open_browser')
 domainName = config['WEB']['domain_name']
 
 
@@ -22,8 +20,8 @@ def openBrowser():
 
 if __name__ == '__main__':
     # Check if dependencies are installed
-    if dependencyInstalled not in TURN_ON and debugMode not in TURN_ON:
-        if input('Dependencies not installed. Install now? ') in TURN_ON:
+    if not dependencyInstalled and not debugMode:
+        if input('Dependencies not installed. Install now? ') in ['y', 'Y', 'yes', 'Yes', 'YES']:
             os.system('pip install -r requirements.txt')
             
             # Update config file
@@ -33,11 +31,11 @@ if __name__ == '__main__':
 
 
     # Check for debug mode, then run server
-    if debugMode in TURN_ON:
+    if debugMode:
         os.environ["FLASK_APP"] = "aWaifu/web"
         os.environ["FLASK_ENV"] = "development"
 
-        if autoOpenBrowser in TURN_ON:
+        if autoOpenBrowser:
             openBrowser()
         os.system("flask run")
     else:
