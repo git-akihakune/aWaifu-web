@@ -10,12 +10,18 @@ config.read(configfile)
 debugMode = config.getboolean('DEFAULT', 'debug')
 dependencyInstalled = config.getboolean('DEFAULT', 'dependency_installed')
 autoOpenBrowser = config.getboolean('WEB', 'auto_open_browser')
+autoRunTests = config.getboolean('DEFAULT', 'auto_run_test')
 domainName = config['WEB']['domain_name']
 
 
 def openBrowser():
     import webbrowser
     webbrowser.open(domainName)
+
+
+def runTests():
+    from tests import test
+    test.run()
 
 
 if __name__ == '__main__':
@@ -29,7 +35,6 @@ if __name__ == '__main__':
             with open(configfile, 'w') as configfile:
                 config.write(configfile)
 
-
     # Check for debug mode, then run server
     if debugMode:
         os.environ["FLASK_APP"] = "aWaifu/web"
@@ -37,6 +42,10 @@ if __name__ == '__main__':
 
         if autoOpenBrowser:
             openBrowser()
-        os.system("flask run")
     else:
-        print("Production mode detected. Please set up WSGI.")
+        raise SystemExit("Production mode detected. Please set up WSGI.")
+
+    if autoRunTests:
+        runTests()
+
+    os.system('flask run')
