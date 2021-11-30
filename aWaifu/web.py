@@ -39,21 +39,28 @@ def profile():
 def api():
     if request.method == 'POST':
         apiKey = request.form.get('api_key')
+        numberOfProfiles = int(request.form.get('number_of_profiles')) if request.form.get('number_of_profiles') else 4
+        multiCultures = request.form.get('multi_cultures') in ['true', 'True']
+        bigWaifu = request.form.get('big_waifu') in ['true', 'True']
+        faster = request.form.get('faster') in ['true', 'True']
     else:
         apiKey = request.args.get('api_key')
+        numberOfProfiles = int(request.args.get('number_of_profiles')) if request.args.get('number_of_profiles') else 4
+        multiCultures = request.args.get('multi_cultures') in ['true', 'True']
+        bigWaifu = request.args.get('big_waifu') in ['true', 'True']
+        faster = request.args.get('faster') in ['true', 'True']
 
-    if apiKey == None or not apiKeyIsValid(apiKey):
+    if not apiKeyIsValid(apiKey):
         return jsonify({
         "status": "error",
-        "message": "API key is invalid"
+        "message": "Invalid API key"
     })
 
-    data = waifugen.generate()
+    data = waifugen.generate(numberOfProfiles, multiCultures, bigWaifu, faster)
 
     return jsonify({
         "status": "success",
-        "message": "API key is valid",
-        "api_key": apiKey,
+        "message": "Here are your waifus",
         "data": data
     })
 
