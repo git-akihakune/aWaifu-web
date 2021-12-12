@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_cors import CORS
 from utils import waifugen
 from utils.security import apiKeyIsValid
-from utils.config import domainName
+from utils.config import domainName, verbose
 
 app = Flask(__name__,
             static_url_path='',
@@ -56,7 +56,8 @@ def api():
         "message": "Invalid API key"
     })
 
-    data = waifugen.generate(numberOfProfiles, multiCultures, bigWaifu, faster)
+    if verbose: print(f"[!] Processing request from {request.remote_addr}")
+    data = waifugen.generate(numberOfProfiles, multiCultures, bigWaifu, faster, verbose)
 
     return jsonify({
         "status": "success",

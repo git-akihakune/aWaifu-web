@@ -8,7 +8,7 @@
 host = "http://127.0.0.1:5000"
 endpoint = "/api/profile"
 apiKey = "test"
-numberOfProfiles = 1
+numberOfProfiles = 5
 multiCultures = False
 bigWaifu = False
 faster = False
@@ -25,7 +25,7 @@ from typing import Dict
 def save(data: Dict[str, str]) -> None:
     """Save the data to a file"""
     dirPath: str = tempfile.mkdtemp()
-    log(f"[-] Saving data to {dirPath}")
+    log(f"[!] Saving request to {dirPath}")
 
     rawData: str = data["data"]
     for profile in rawData:
@@ -35,7 +35,7 @@ def save(data: Dict[str, str]) -> None:
         log(f"[-] Saved {profile['name']}")
 
         profile.pop('image', None)
-        log(f"Removed image key for {profile['name']}")
+        log(f"[-] Removed image key for {profile['name']}")
 
     log(f"[+] Saved all images to {dirPath}")
     
@@ -52,7 +52,7 @@ def log(message):
         print(message)
 
 
-if __name__ == "__main__":
+def main():
     # Create a dictionary with the data
     postData = {
         "api_key": apiKey,
@@ -73,3 +73,6 @@ if __name__ == "__main__":
         exit(1)
 
     save(data)
+
+if __name__ == '__main__':
+    main()
