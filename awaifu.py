@@ -19,11 +19,6 @@ def openBrowser():
     webbrowser.open(domainName)
 
 
-def runTests():
-    from tests import test
-    test.run()
-
-
 if __name__ == '__main__':
     # Check if dependencies are installed
     if not dependencyInstalled and not debugMode:
@@ -44,8 +39,5 @@ if __name__ == '__main__':
             openBrowser()
     else:
         raise SystemExit("Production mode detected. Please set up WSGI.")
-
-    if autoRunTests:
-        runTests()
 
     os.system('flask run')

@@ -8,3 +8,4 @@ config = configparser.ConfigParser()
 config.read(os.path.join(ROOT_DIR, configfile))
 
 verbose = config.getboolean('DEFAULT', 'verbose')
+allowedKeys = config['API']['allowed_keys'].split('\n')
